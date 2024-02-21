@@ -43,9 +43,23 @@ app.delete('/deleteUser/:id', function(req,res)
     res.send(data)
 })
 
-app.post('addUser', function(req,res) 
+var bodyParser= require('body-parser')
+var urlEncoded= bodyParser.urlencoded({extended:false})
+
+app.get('/form', function(req,res){
+    res.sendFile(__dirname+"/user.html")
+}
+)
+app.post('/addUser',  urlEncoded,function(req,res) 
 {
-    res.send("userAdded")
+   
+    var newUser={name:"", password:"", profession:""}
+    newUser.name=req.body.name
+    newUser.password=req.body.password
+    var data= fs.readFileSync(__dirname+"/user.json") //as byte
+    data= JSON.parse(String(data))
+    data['user4']= newUser
+    res.send(data)
 })
 
 var server= app.listen(9000, function()
